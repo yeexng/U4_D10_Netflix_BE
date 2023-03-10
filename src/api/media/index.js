@@ -31,9 +31,9 @@ mediasRouter.post(
 mediasRouter.get("/", async (req, res, next) => {
   try {
     const mediasArray = await getMedias();
-    if (req.query && req.query.type) {
+    if (req.query && req.query.title) {
       const filteredMedias = mediasArray.filter(
-        (m) => m.type === req.query.type
+        (m) => m.title === req.query.title
       );
       res.send(filteredMedias);
     } else {
