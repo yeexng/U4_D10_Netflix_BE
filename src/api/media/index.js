@@ -65,4 +65,34 @@ mediasRouter.get("/:id", async (req, res, next) => {
   }
 });
 
+//comments
+mediasRouter.post("/:id/comments", async (req, res, next) => {
+  try {
+    const newComment = {
+      ...req.body,
+      comment_id: uniqid(),
+      createdAt: new Date(),
+      updatedAt: new Date(),
+    };
+    const mediasArray = await getMedias();
+    const i = mediasArray.findIndex((m) => m.imdbID === req.params.id);
+    mediasArray[i].comments.push(newComment);
+    await writeMedias(mediasArray);
+    res.status(201).send("Comment Posted");
+  } catch (error) {
+    console.log(error);
+    next(error);
+  }
+});
+
+mediasRouter.get("/:id/comments", async (req, res, next) => {
+  try {
+    const mediasArray = await getMedias();
+    const index = mediasArray.findIndex((m) => m.imdbID === req.params.id);
+    res.send(mediasArray[index].comments);
+  } catch (error) {
+    next(error);
+  }
+});
+
 export default mediasRouter;
